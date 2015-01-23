@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -18,12 +19,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
 public class LoginActivity extends ActionBarActivity {
+
+
+    private static final String INT_PRIVATE_KEY = "private_key";
+    private static final String INT_PHASE2 = "phase2";
+    private static final String INT_PASSWORD = "password";
+    private static final String INT_IDENTITY = "identity";
+    private static final String INT_EAP = "eap";
+    private static final String INT_CLIENT_CERT = "client_cert";
+    private static final String INT_CA_CERT = "ca_cert";
+    private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
+    final String INT_ENTERPRISEFIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
 
     @InjectView(R.id.ssid_name)
     TextView mSsidLabel;
@@ -206,6 +226,35 @@ public class LoginActivity extends ActionBarActivity {
         return conf;
     }
 
+    private WifiConfiguration WPAEnterpriseConfiguration() {
+        WifiEnterpriseConfig enterpriseConfig = new WifiEnterpriseConfig();
+        WifiConfiguration wifiConfig = new WifiConfiguration();
+        wifiConfig.SSID = "icerad";
+        wifiConfig.hiddenSSID = true;
+        wifiConfig.priority = 40;
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_EAP);
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.IEEE8021X);
+
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+
+        wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+        wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+
+        wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+        wifiConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+
+        enterpriseConfig.setIdentity("user"); //change with wifi userid
+        enterpriseConfig.setPassword("password"); //change with password
+        enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PEAP);
+
+        wifiConfig.enterpriseConfig = enterpriseConfig;
+
+        return wifiConfig;
+    }
+
     private void disconnectWifi() {
         mWifiManager.disconnect();
     }
@@ -216,7 +265,12 @@ public class LoginActivity extends ActionBarActivity {
             public void onClick(View v) {
                 WifiConfiguration conf;
                 if (mScanResult.capabilities.contains("WPA")) {
-                    conf = wpaConfiguration();
+                    if (mScanResult.capabilities.contains("EAP")) {
+                        conf = WPAEnterpriseConfiguration();
+                    } else {
+                        conf = wpaConfiguration();
+                    }
+
                 } else if (mScanResult.capabilities.contains("WEP")) {
                     conf = wepConfiguration();
                 } else {
@@ -233,12 +287,6 @@ public class LoginActivity extends ActionBarActivity {
         mDisconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                WifiConfiguration conf = new WifiConfiguration();
-//                conf.SSID = "\"" + mScanResult.SSID + "\"";
-//                conf.preSharedKey = "\""+ mPasswordField.getText().toString() +"\"";
-//                WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//                int netId = wifiManager.addNetwork(conf);
-//                wifiManager.removeNetwork(netId);
                 disconnectWifi();
             }
         });
