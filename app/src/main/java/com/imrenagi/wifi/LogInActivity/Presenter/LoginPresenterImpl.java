@@ -30,8 +30,8 @@ public class LoginPresenterImpl implements LoginPresenter, OnLoginFinishedListen
     }
 
     @Override
-    public void onConnected() {
-        loginView.createAlertDialog("Connected", "You are already connected to wireless network.");
+    public void onConnected(String ssid) {
+        loginView.createAlertDialog("Connected", "You are already connected to " + ssid +".");
     }
 
     @Override
@@ -81,11 +81,11 @@ public class LoginPresenterImpl implements LoginPresenter, OnLoginFinishedListen
 
     @Override
     public void registerBroadcastReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
-
+        loginView.registerBroadcastReceiver(broadcastReceiver, intentFilter);
     }
 
     @Override
     public void unregisterBroadcastReceiver(BroadcastReceiver broadcastReceiver) {
-
+        loginView.unregisterBroadcastReceiver(broadcastReceiver);
     }
 }

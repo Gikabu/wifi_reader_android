@@ -5,7 +5,7 @@ package com.imrenagi.wifi.LogInActivity.Model;
  */
 public interface OnLoginFinishedListener {
 
-    public void onConnected();
+    public void onConnected(String ssid);
 
     public void onAuthenticationError();
 }

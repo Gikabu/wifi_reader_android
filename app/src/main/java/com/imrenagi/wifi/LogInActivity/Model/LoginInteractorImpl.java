@@ -26,6 +26,7 @@ public class LoginInteractorImpl implements LoginInteractor, OnLoginFinishedList
     public LoginInteractorImpl(ServiceHandler serviceHandler, OnLoginFinishedListener listener, ReceiverRegistration receiverRegistration) {
         this.serviceHandler = serviceHandler;
         this.listener = listener;
+        this.receiverRegistration = receiverRegistration;
 
         authenticationErrorReceiver = new AuthenticationErrorReceiver(this);
         connectionReceiver = new ConnectionReceiver(this);
@@ -65,8 +66,8 @@ public class LoginInteractorImpl implements LoginInteractor, OnLoginFinishedList
     }
 
     @Override
-    public void onConnected() {
-        listener.onConnected();
+    public void onConnected(String ssid) {
+        listener.onConnected(ssid);
     }
 
     @Override
