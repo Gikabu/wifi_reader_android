@@ -1,4 +1,4 @@
-package com.imrenagi.wifi;
+package com.imrenagi.wifi.LogInActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.imrenagi.wifi.R;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
