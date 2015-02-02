@@ -9,5 +9,6 @@
     <string name="disabled">disabled</string>
     <string name="turn_off_wifi">Turn Off Wifi</string>
     <string name="turn_on_wifi">Turn On Wifi</string>
+    <string name="title_activity_login_screen">LoginScreenActivity</string>
 
 </resources>

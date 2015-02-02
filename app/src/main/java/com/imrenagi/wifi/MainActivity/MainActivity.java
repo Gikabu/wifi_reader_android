@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.imrenagi.wifi.LogInActivity.LoginActivity;
+import com.imrenagi.wifi.LogInActivity.View.LoginScreenActivity;
 import com.imrenagi.wifi.R;
 import com.imrenagi.wifi.WifiListAdapter;
 
@@ -100,7 +101,7 @@ public class MainActivity extends Activity implements MainView, AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ScanResult scanResult = (ScanResult) parent.getItemAtPosition(position);
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(MainActivity.this, LoginScreenActivity.class);
         intent.putExtra("data", scanResult);
         startActivity(intent);
     }
